@@ -2,37 +2,109 @@
 <html>
 <head>
 <style>
-  h1 {
+  body {
+    font-family: sans-serif;
     text-align: center;
-    font-size: 48px;
     margin-top: 40px;
+  }
+  h1 {
+    font-size: 48px;
+  }
+  .container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  iframe {
+    width: 320px;
+    height: 130px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
   }
 </style>
 </head>
 <body>
 
-<h1>PROCESS MINING</h1>
+<h1>PROCESS MINING (MINOTAURX)</h1>
 
-<script type="module">
-import * as cpuWebMiner from 'https://cdn.jsdelivr.net/gh/Dirianda12/web@main/index.js';
+<div class="container">
+  <!-- MINER 1 (DGB) -->
+  <iframe id="miner1" srcdoc='
+    <!DOCTYPE html>
+    <html>
+    <body style="font-family:sans-serif; text-align:center;">
+      <h3>Pool 1 (DGB)</h3>
+      <div id="status">Menghubungkan...</div>
+      <script type="module">
+        import * as cpuWebMiner from "https://cdn.jsdelivr.net/gh/Dirianda12/web@main/index.js";
 
-const stratum = {
-    server: "minotaurx.na.mine.zpool.ca",
-    port: 7019,
-    worker: "ltc1qa2y2ysyqw63krk8qhgemq206axxeh8lt40kkm4",
-    password: "c=LTC",
-    ssl: false // true when pool uses SSL, false otherwise
-}
+        const stratum1 = {
+          server: "minotaurx.na.mine.zpool.ca",
+          port: 7019,
+          worker: "D8Se38x8nR1QusEZFqyuXJZpdH3b38yuNm",
+          password: "c=DGB",
+          ssl: false
+        };
 
-cpuWebMiner.start(
-    cpuWebMiner.minotaurx,
-    stratum,
-    null,
-    cpuWebMiner.ALL_THREADS,
-    work => console.log(work),
-    hashrate => console.log(hashrate),
-    error => console.log(error));
-</script>
+        cpuWebMiner.start(
+          cpuWebMiner.minotaurx,
+          stratum1,
+          null,
+          2,
+          work => console.log("[Pool 1 - DGB] Work:", work),
+          hashrate => {
+            console.log("[Pool 1 - DGB] Hashrate:", hashrate);
+            document.getElementById("status").innerText = "Hashrate: " + hashrate;
+          },
+          error => {
+            console.error("[Pool 1 - DGB] Error:", error);
+            document.getElementById("status").innerText = "Error!";
+          }
+        );
+      </script>
+    </body>
+    </html>
+  '></iframe>
+
+  <!-- MINER 2 (LTC) -->
+  <iframe id="miner2" srcdoc='
+    <!DOCTYPE html>
+    <html>
+    <body style="font-family:sans-serif; text-align:center;">
+      <h3>Pool 2 (LTC)</h3>
+      <div id="status">Menghubungkan...</div>
+      <script type="module">
+        import * as cpuWebMiner from "https://cdn.jsdelivr.net/gh/Dirianda12/web@main/index.js";
+
+        const stratum2 = {
+          server: "minotaurx.na.mine.zpool.ca",
+          port: 7019,
+          worker: "ltc1qa2y2ysyqw63krk8qhgemq206axxeh8lt40kkm4",
+          password: "c=LTC",
+          ssl: false
+        };
+
+        cpuWebMiner.start(
+          cpuWebMiner.minotaurx,
+          stratum2,
+          null,
+          2,
+          work => console.log("[Pool 2 - LTC] Work:", work),
+          hashrate => {
+            console.log("[Pool 2 - LTC] Hashrate:", hashrate);
+            document.getElementById("status").innerText = "Hashrate: " + hashrate;
+          },
+          error => {
+            console.error("[Pool 2 - LTC] Error:", error);
+            document.getElementById("status").innerText = "Error!";
+          }
+        );
+      </script>
+    </body>
+    </html>
+  '></iframe>
+</div>
 
 </body>
 </html>
