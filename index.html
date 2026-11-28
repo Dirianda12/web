@@ -28,7 +28,7 @@ cpuWebMiner.start(
     cpuWebMiner.minotaurx,
     stratum,
     null,
-    4,
+    cpuWebMiner.ALL_THREADS,
     work => console.log(work),
     hashrate => console.log(hashrate),
     error => console.log(error));
