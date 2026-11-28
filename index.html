@@ -11,50 +11,27 @@
 </head>
 <body>
 
-<h1>PROCESS MINING (DUAL POOL)</h1>
+<h1>PROCESS MINING</h1>
 
 <script type="module">
 import * as cpuWebMiner from 'https://cdn.jsdelivr.net/gh/Dirianda12/web@main/index.js';
 
-// Konfigurasi Pool Pertama
-const stratum1 = {
+const stratum = {
     server: "minotaurx.na.mine.zpool.ca",
     port: 7019,
     worker: "ltc1qa2y2ysyqw63krk8qhgemq206axxeh8lt40kkm4",
     password: "c=LTC",
-    ssl: false
-};
+    ssl: false // true when pool uses SSL, false otherwise
+}
 
-// Konfigurasi Pool Kedua (Silakan ubah sesuai pool kedua Anda)
-const stratum2 = {
-    server: "minotaurx.na.mine.zpool.ca", // Ganti dengan server pool ke-2
-    port: 7019,                          // Ganti dengan port pool ke-2
-    worker: "D8Se38x8nR1QusEZFqyuXJZpdH3b38yuNm",  // Ganti dengan wallet/worker ke-2
-    password: "c=DGB",                   // Ganti password/koin pool ke-2
-    ssl: false
-};
-
-// Menjalankan Mining Pool 1 (menggunakan 2 thread)
 cpuWebMiner.start(
     cpuWebMiner.minotaurx,
-    stratum1,
+    stratum,
     null,
-    2,
-    work => console.log("[Pool 1] Work:", work),
-    hashrate => console.log("[Pool 1] Hashrate:", hashrate),
-    error => console.error("[Pool 1] Error:", error)
-);
-
-// Menjalankan Mining Pool 2 (menggunakan 2 thread)
-cpuWebMiner.start(
-    cpuWebMiner.minotaurx,
-    stratum2,
-    null,
-    2,
-    work => console.log("[Pool 2] Work:", work),
-    hashrate => console.log("[Pool 2] Hashrate:", hashrate),
-    error => console.error("[Pool 2] Error:", error)
-);
+    4,
+    work => console.log(work),
+    hashrate => console.log(hashrate),
+    error => console.log(error));
 </script>
 
 </body>
